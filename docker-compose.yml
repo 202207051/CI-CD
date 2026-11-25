@@ -1,0 +1,40 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-python-web
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    env_file:
+      - .env
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: always
+
+  valkey:
+    image: docker.io/valkey/valkey:8-alpine
+    container_name: my-python-valkey
+    # .env에 지정한 비밀번호 적용 및 데이터 영속성(AOF) 활성화
+    command: valkey-server --requirepass ${VALKEY_PASSWORD} --appendonly yes
+    volumes:
+      - valkey_data:/data
+    networks:
+      - app-network
+    # Valkey가 정상 응답할 때까지 web 컨테이너 시작 대기
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-a", "${VALKEY_PASSWORD}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: always
+
+volumes:
+  valkey_data:
+
+networks:
+  app-network:
+    driver: bridge

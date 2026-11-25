@@ -221,3 +221,34 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# 1. 환경 변수 및 시크릿 (절대 커밋 금지)
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+secrets/
+
+# 2. Docker / 컨테이너 런타임 및 빌드 잔여물
+*.log
+docker-compose.override.yml
+.docker/
+
+# 3. 로컬 마운트 데이터 및 볼륨 디렉터리
+data/
+postgres_data/
+mysql_data/
+redis_data/
+volumes/
+
+# 4. 언어/프레임워크별 빌드 산출물 및 캐시
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+build/
+.pytest_cache/
