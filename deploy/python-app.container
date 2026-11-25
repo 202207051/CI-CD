@@ -1,0 +1,19 @@
+[Unit]
+Description=My Python FastAPI Service
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=localhost/my-python-app:latest
+ContainerName=my-python-web
+PublishPort=8000:8000
+EnvironmentFile=%h/.config/my-python-app/.env
+Network=app-network.network
+AutoUpdate=registry
+
+[Service]
+Restart=always
+TimeoutStartSec=90
+
+[Install]
+WantedBy=default.target
